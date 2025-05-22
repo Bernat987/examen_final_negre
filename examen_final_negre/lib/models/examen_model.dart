@@ -22,7 +22,8 @@ class Examen {
         foto: this.foto,
         nom: this.nom,
         tipus: this.tipus,
-        dificultat: this.dificultat
+        dificultat: this.dificultat,
+        id: this.id
       );
 
     factory Examen.fromJson(String str) => Examen.fromMap(json.decode(str));

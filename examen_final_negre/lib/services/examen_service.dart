@@ -70,10 +70,9 @@ class ExamenService extends ChangeNotifier {
   }
 
   Future<bool> deleteExamen(Examen examen) async{
-    final url = Uri.https(_baseURL, 'api/examen/');
-    final resp = await http.delete(url, body: examen.toJson());
+    final url = Uri.https(_baseURL, 'api/examen/'+examen.id!);
+    final resp = await http.delete(url);
     final decodedData = resp.body;
-    print(decodedData);
 
     return true;
   }

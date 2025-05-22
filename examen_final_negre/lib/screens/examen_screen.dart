@@ -84,6 +84,7 @@ Widget _crearBotons(BuildContext context, ExamenService examenService, ExamenFor
                   final String? imageURL = await examenService.uploadImage();
                   if (imageURL != null) examenForm.tempExamen.foto = imageURL;
                   examenService.saveOrCreateExamen(examenForm.tempExamen);
+                  Navigator.of(context).pushNamed('home');
                 }),
       ),
       Expanded(child: SizedBox()),
@@ -101,6 +102,7 @@ Widget _crearBotons(BuildContext context, ExamenService examenService, ExamenFor
                   final String? imageURL = await examenService.uploadImage();
                   if (imageURL != null) examenForm.tempExamen.foto = imageURL;
                   examenService.deleteExamen(examenForm.tempExamen);
+                  Navigator.of(context).pushNamed('home');
                 }),
       ),
       ],
