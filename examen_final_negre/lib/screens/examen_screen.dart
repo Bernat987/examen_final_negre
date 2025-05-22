@@ -62,6 +62,9 @@ class ProductScreenBody extends StatelessWidget {
   }
 }
 
+/**
+ * S'ha creat per poder posar mes d'un boto en la pantalla
+ */
 Widget _crearBotons(BuildContext context, ExamenService examenService, ExamenFormProvider examenForm) {
     return Row(
       children: [

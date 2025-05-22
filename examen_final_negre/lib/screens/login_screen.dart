@@ -5,6 +5,10 @@ import 'package:examen_final_negre/ui/input_decorations.dart';
 import 'package:examen_final_negre/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
+/**
+ * S'ha fet el widget en statefull per poder tenir en compte les dades guardades
+ * No s'ha pogut implementar
+ */
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -13,8 +17,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

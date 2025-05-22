@@ -21,6 +21,9 @@ class ExamenService extends ChangeNotifier {
     this.loadExamen();
   }
 
+/**
+ * Metode en carregat de carregar totes les dades l'inici
+ */
   Future loadExamen() async{
     isLoading = true;
     notifyListeners();
@@ -41,6 +44,9 @@ class ExamenService extends ChangeNotifier {
     notifyListeners();
   }
 
+/**
+ * Metode encarregat de diferenciar si es guarda o es crea un examen nou
+ */
   Future saveOrCreateExamen(Examen examen) async {
     isSaving = true;
     notifyListeners();
@@ -55,8 +61,11 @@ class ExamenService extends ChangeNotifier {
     notifyListeners();
   }
 
+/**
+ * Metode encarregat de guardar les dades de l'examen
+ */
   Future<String> updateExamen(Examen examen) async {
-    final url = Uri.https(_baseURL, 'api/examen/');
+    final url = Uri.https(_baseURL, 'api/examen/'+examen.id!);
     final resp = await http.put(url, body: examen.toJson());
     final decodedData = resp.body;
     print(decodedData);
@@ -69,6 +78,9 @@ class ExamenService extends ChangeNotifier {
 
   }
 
+/**
+ * Metode encarregat d'eliminar els examens registrats
+ */
   Future<bool> deleteExamen(Examen examen) async{
     final url = Uri.https(_baseURL, 'api/examen/'+examen.id!);
     final resp = await http.delete(url);
@@ -77,16 +89,15 @@ class ExamenService extends ChangeNotifier {
     return true;
   }
 
+/**
+ * Metode encarregat de crear o guardar un nou examen
+ */
   Future<String> createExamen(Examen plat) async {
     final url = Uri.https(_baseURL, 'api/examen/');
     final resp = await http.post(url, body: plat.toJson());
     final decodedData = json.decode(resp.body);
     plat.id = decodedData['id'];
     this.examen.add(plat);
-
-    //final index = this.products.indexWhere((element) => element.id == product.id);
-
-    //this.products[index] = product;
 
     return plat.id!;
 

@@ -32,7 +32,7 @@ class LoginFormProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final login = LoginModel(email: email, password: password, saveCredentials:saveCredentials);
-      DBProvider.db.insertRawScan(login);
+      DBProvider.db.insertRawLogin(login);
       user = email;
 
       

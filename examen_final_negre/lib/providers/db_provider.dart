@@ -19,6 +19,9 @@ class DBProvider {
     return _database!;
   }
 
+/**
+ * Metode encarregat de inicialitzar la base de dades
+ */
   Future<Database> initDB() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
 
@@ -39,8 +42,10 @@ class DBProvider {
       },
     );
   }
-
-  Future<int> insertRawScan(LoginModel nouLogin) async {
+/**
+ * Metode encarregat de inserir un login
+ */
+  Future<int> insertRawLogin(LoginModel nouLogin) async {
     final id = nouLogin.id;
     final email = nouLogin.email;
     final password = nouLogin.password;
@@ -71,18 +76,7 @@ class DBProvider {
       return null;
     }
   }
-  
-  /**
-   * Mètode per afegir scans en la base de dades
-   */
-  Future<int> insertScan(LoginModel nouLogin) async {
-    final db = await database;
 
-    final res = await db.insert('Logins', nouLogin.toMap());
-
-    print(res);
-    return res;
-  }
 
 /**
  * Mètode que retorna els scans depenet del id dins la base de dades
@@ -97,25 +91,5 @@ class DBProvider {
     }else{
       return null;
     }
-  }
-
-/**
- * Mètode encarregat d'eliminar tot el contingut de la base de dades
- */
-  Future<int> deleteAll() async{
-    final db = await database;
-    final res = db.rawDelete('''
-      DELETE FROM Scans
-    ''');
-    return res;
-  }
-
-/**
- * Mètode encarregat d'eliminar un sol registre
- */
-  Future<int> deleteScan(int id) async{
-    final db = await database;
-    final res = db.delete("Scans", where: 'id = ?', whereArgs: [id]);
-    return res;
   }
 }

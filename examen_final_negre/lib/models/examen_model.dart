@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+/**
+ * Model arrel dels examens
+ */
 class Examen {
      String? id;
      String nom;
