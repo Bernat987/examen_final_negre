@@ -61,14 +61,14 @@ class DBProvider {
     return res.isNotEmpty ? res.map((e) => LoginModel.fromMap(e)).toList() : [];
   }
 
-  Future<bool> checkIsLogin() async {
+  Future<LoginModel?> checkIsLogin() async {
     final db = await database;
 
     final res = await db.query('Logins');
-    if(res.isEmpty){
-      return false;
+    if(res.isNotEmpty){
+      return LoginModel.fromMap(res.first);
     }else{
-      return true;
+      return null;
     }
   }
   

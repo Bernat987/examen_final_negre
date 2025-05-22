@@ -14,24 +14,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  @override
-  void initState() {
-    super.initState();
-    _checkLoginStatus();
-  }
-
-/**
- * ref https://stackoverflow.com/questions/77469241/flutter-how-to-show-snackbar-after-page-load?utm_source=chatgpt.com
- */
-  Future<void> _checkLoginStatus() async {
-    final isLoggedIn = await DBProvider.db.checkIsLogin(); // Suponiendo que tienes un método así
-    if (isLoggedIn) {
-      // Esperamos a que el build se complete antes de navegar
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacementNamed(context, 'home');
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +27,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: [
                     SizedBox(height: 10),
-                    Text('Login',
-                        style: Theme.of(context).textTheme.headlineMedium),
+                    Text(
+                      'Login',
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
                     SizedBox(height: 30),
                     ChangeNotifierProvider(
                       create: (_) => LoginFormProvider(),
@@ -56,13 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               SizedBox(height: 50),
-              MaterialButton(
-                child: Text('Crear un nou compte',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    onPressed: () {
-                      Navigator.pushReplacementNamed(context, 'register');
-                    },
-              ),
+
               SizedBox(height: 30),
             ],
           ),
@@ -72,10 +50,18 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class _LoginForm extends StatelessWidget {
+class _LoginForm extends StatefulWidget {
+  @override
+  State<_LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<_LoginForm> {
   @override
   Widget build(BuildContext context) {
     final loginForm = Provider.of<LoginFormProvider>(context);
+    final isLoggedIn = DBProvider.db.checkIsLogin();
+
+    
     return Container(
       child: Form(
         key: loginForm.formKey,
@@ -117,9 +103,17 @@ class _LoginForm extends StatelessWidget {
               },
             ),
             SizedBox(height: 30),
+            SwitchListTile.adaptive(
+              value: loginForm.saveCredentials,
+              title: Text('Disponible'),
+              activeColor: Colors.indigo,
+              onChanged: (value) => loginForm.saveCredentials = value,
+            ),
+            SizedBox(height: 30),
             MaterialButton(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(10),
+              ),
               disabledColor: Colors.grey,
               elevation: 0,
               color: Colors.deepPurple,
@@ -130,24 +124,48 @@ class _LoginForm extends StatelessWidget {
                   style: TextStyle(color: Colors.white),
                 ),
               ),
-              onPressed: loginForm.isLoading
-                  ? null
-                  : () async {
-                      // Deshabilitam el teclat
-                      FocusScope.of(context).unfocus();
-
-                      if (loginForm.isValidForm()) {
-                        loginForm.isLoading = true;
-                        await loginForm.loginUser(loginForm.email, loginForm.password);
-                        loginForm.isLoading = false;
-                        if(loginForm.accesGranted){
-                          Navigator.pushReplacementNamed(context, 'home');
-                        }else{
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(loginForm.errorMessage)));
+              onPressed:
+                  loginForm.isLoading
+                      ? null
+                      : () async {
+                        // Deshabilitam el teclat
+                        FocusScope.of(context).unfocus();
+                        if (loginForm.saveCredentials) {
+                          if (loginForm.isValidForm()) {
+                            loginForm.isLoading = true;
+                            await loginForm.loginUser(
+                              loginForm.email,
+                              loginForm.password,
+                              loginForm.saveCredentials
+                            );
+                            loginForm.isLoading = false;
+                            if (loginForm.accesGranted) {
+                              Navigator.pushReplacementNamed(context, 'home');
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(loginForm.errorMessage)),
+                              );
+                            }
+                          }
+                        } else {
+                          if (loginForm.isValidForm()) {
+                            loginForm.isLoading = true;
+                            await loginForm.loginUserWithoutSave(
+                              loginForm.email,
+                              loginForm.password,
+                              loginForm.saveCredentials
+                            );
+                            loginForm.isLoading = false;
+                            if (loginForm.accesGranted) {
+                              Navigator.pushReplacementNamed(context, 'home');
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(loginForm.errorMessage)),
+                              );
+                            }
+                          }
                         }
-                        
-                      }
-                    },
+                      },
             ),
           ],
         ),

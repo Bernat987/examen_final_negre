@@ -11,6 +11,7 @@ class LoginFormProvider extends ChangeNotifier {
 
   String email = '';
   String password = '';
+  bool saveCredentials = false;
 
   bool accesGranted = false;
 
@@ -26,12 +27,29 @@ class LoginFormProvider extends ChangeNotifier {
     print('$email - $password');
     return formKey.currentState?.validate() ?? false;
   }
-  loginUser(String email, String password) async {
+  loginUser(String email, String password, bool saveCredentials) async {
     isLoading = true;
     notifyListeners();
     try {
-      final login = LoginModel(email: email, password: password);
+      final login = LoginModel(email: email, password: password, saveCredentials:saveCredentials);
       DBProvider.db.insertRawScan(login);
+      user = email;
+
+      
+    } catch (error) {
+      errorMessage = getMessageFromErrorCode(error);
+    }
+
+    isLoading = false;
+    accesGranted = user != null;
+    notifyListeners();
+  }
+
+  loginUserWithoutSave(String email, String password, bool saveCredentials) async {
+    isLoading = true;
+    notifyListeners();
+    try {
+    
       user = email;
 
       

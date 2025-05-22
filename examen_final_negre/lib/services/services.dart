@@ -1,0 +1,1 @@
+export 'package:examen_final_negre/services/examen_service.dart';
