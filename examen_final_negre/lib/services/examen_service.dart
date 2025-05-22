@@ -41,39 +41,48 @@ class ExamenService extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future saveOrCreatePlat(Examen plat) async {
+  Future saveOrCreateExamen(Examen examen) async {
     isSaving = true;
     notifyListeners();
 
-    if(plat.id == null) {
-      await createPlat(plat);
+    if(examen.id == null) {
+      await createExamen(examen);
     }else{
-      await updatePlat(plat);
+      await updateExamen(examen);
     }
 
     isSaving = false;
     notifyListeners();
   }
 
-  Future<String> updatePlat(Examen plat) async {
-    final url = Uri.https(_baseURL, 'Examen/${plat.id}.json');
-    final resp = await http.put(url, body: plat.toJson());
+  Future<String> updateExamen(Examen examen) async {
+    final url = Uri.https(_baseURL, 'api/examen/');
+    final resp = await http.put(url, body: examen.toJson());
     final decodedData = resp.body;
     print(decodedData);
 
-    final index = this.examen.indexWhere((element) => element.id == plat.id);
+    final index = this.examen.indexWhere((element) => element.id == examen.id);
 
-    this.examen[index] = plat;
+    this.examen[index] = examen;
 
-    return plat.id!;
+    return examen.id!;
 
   }
 
-  Future<String> createPlat(Examen plat) async {
-    final url = Uri.https(_baseURL, 'Examen.json');
+  Future<bool> deleteExamen(Examen examen) async{
+    final url = Uri.https(_baseURL, 'api/examen/');
+    final resp = await http.delete(url, body: examen.toJson());
+    final decodedData = resp.body;
+    print(decodedData);
+
+    return true;
+  }
+
+  Future<String> createExamen(Examen plat) async {
+    final url = Uri.https(_baseURL, 'api/examen/');
     final resp = await http.post(url, body: plat.toJson());
     final decodedData = json.decode(resp.body);
-    plat.id = decodedData['name'];
+    plat.id = decodedData['id'];
     this.examen.add(plat);
 
     //final index = this.products.indexWhere((element) => element.id == product.id);

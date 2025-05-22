@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:examen_final_negre/providers/examen_form_provider.dart';
 import 'package:examen_final_negre/services/services.dart';
-import 'package:examen_final_negre/utils/utils.dart';
 import 'package:examen_final_negre/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
@@ -84,7 +83,24 @@ Widget _crearBotons(BuildContext context, ExamenService examenService, ExamenFor
                   if (!examenForm.isValidForm()) return;
                   final String? imageURL = await examenService.uploadImage();
                   if (imageURL != null) examenForm.tempExamen.foto = imageURL;
-                  examenService.saveOrCreatePlat(examenForm.tempExamen);
+                  examenService.saveOrCreateExamen(examenForm.tempExamen);
+                }),
+      ),
+      Expanded(child: SizedBox()),
+      FloatingActionButton(
+        heroTag: 'fe2',
+        child:
+            examenService.isSaving
+                ? CircularProgressIndicator(color: Colors.white)
+                : Icon(Icons.delete),
+        onPressed:
+            examenService.isSaving
+                ? null
+                : (() async {
+                  if (!examenForm.isValidForm()) return;
+                  final String? imageURL = await examenService.uploadImage();
+                  if (imageURL != null) examenForm.tempExamen.foto = imageURL;
+                  examenService.deleteExamen(examenForm.tempExamen);
                 }),
       ),
       ],
@@ -142,27 +158,28 @@ class _ProductForm extends StatelessWidget {
                 onChanged: (value) => tempProduct.tipus = value,
                 validator: (value) {
                   if (value == null || value.length < 1) {
-                    return 'El nom es obligatori';
+                    return 'El tipus es obligatori';
                   }
                 },
                 decoration: InputDecorations.authInputDecoration(
-                  hintText: 'Tipus del producte',
+                  hintText: 'Tipus examen',
                   labelText: 'Tipus:',
                 ),
               ),
 
               SizedBox(height: 30),
+
               TextFormField(
-                initialValue: tempProduct.restaurant,
-                onChanged: (value) => tempProduct.restaurant = value,
+                initialValue: tempProduct.dificultat,
+                onChanged: (value) => tempProduct.dificultat = value,
                 validator: (value) {
                   if (value == null || value.length < 1) {
-                    return 'El nom es obligatori';
+                    return 'La dificultat es obligatori';
                   }
                 },
                 decoration: InputDecorations.authInputDecoration(
-                  hintText: 'Restaurant',
-                  labelText: 'Restaurant:',
+                  hintText: 'Dificultat',
+                  labelText: 'Dificultat:',
                 ),
               ),
 

@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
         onPressed: () {
           examenService.newpicture = null;
           examenService.selectedExamen = Examen(descripcio: '', nom: '', dificultat: '', tipus: '');
-          Navigator.of(context).pushNamed('product');
+          Navigator.of(context).pushNamed('examen');
         },
       ),
     );
