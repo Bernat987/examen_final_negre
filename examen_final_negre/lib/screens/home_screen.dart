@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           onTap: () {
             examenService.selectedExamen =
                 examenService.examen[index].copy();
-            Navigator.of(context).pushNamed('product');
+            Navigator.of(context).pushNamed('examen');
           },
         ),
       ),

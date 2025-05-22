@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:convert' as convert;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:examen_final_negre/models/examen_model.dart';
 import 'package:http/http.dart' as http;
 
 class ExamenService extends ChangeNotifier {
-  final String _baseURL = 'examen-practic-sim-default-rtdb.europe-west1.firebasedatabase.app';
+  final String _baseURL = 'ca1249a708d96b2381b3.free.beeceptor.com';
 
   final List<Examen> examen = [];
   late Examen selectedExamen;
@@ -24,14 +25,15 @@ class ExamenService extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final url = Uri.https(_baseURL, 'Examen.json');
+    final url = Uri.https(_baseURL, 'api/examen/');
     final resp = await http.get(url);
 
-    final Map<String, dynamic> ExamenMap = json.decode(resp.body);
+    print(resp.body);
     
-    ExamenMap.forEach((key, value) {
+    var jsonResponse = List<Map<String, dynamic>>.from(convert.jsonDecode(resp.body));
+
+    jsonResponse.forEach((value) {
       final tempProduct = Examen.fromMap(value);
-      tempProduct.id = key;
       examen.add(tempProduct);
     });
 

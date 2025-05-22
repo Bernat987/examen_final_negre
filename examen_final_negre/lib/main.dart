@@ -1,9 +1,23 @@
 import 'package:examen_final_negre/screens/login_screen.dart';
 import 'package:examen_final_negre/screens/screens.dart';
+import 'package:examen_final_negre/services/services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp( AppState());
+}
+
+class AppState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ExamenService(), lazy: false),
+      ],
+      child: MyApp(),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
